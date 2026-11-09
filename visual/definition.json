@@ -1,0 +1,46 @@
+{
+  "id": "ourapps-ae.sound-cues",
+  "name": "Sound cues",
+  "kind": "component",
+  "status": "example",
+  "package": "ourapps-ae/sound-cues",
+  "version": "0.3.0",
+  "ports": [
+    {
+      "id": "preferences",
+      "name": "Preferences",
+      "direction": "input",
+      "kind": "interface",
+      "type": "ae/preferences",
+      "version": "1.0.0",
+      "required": true,
+      "cardinality": "one"
+    },
+    {
+      "id": "sound-cues",
+      "name": "Sound cues",
+      "direction": "output",
+      "kind": "interface",
+      "type": "ae/sound-cues",
+      "version": "1.0.0"
+    }
+  ],
+  "settings": [
+    {
+      "id": "soundManifest",
+      "name": "Soundmanifest",
+      "type": "string",
+      "required": false,
+      "secret": false,
+      "default": "sounds"
+    },
+    {
+      "id": "defaultMuted",
+      "name": "Defaultmuted",
+      "type": "boolean",
+      "required": false,
+      "secret": false,
+      "default": false
+    }
+  ]
+}

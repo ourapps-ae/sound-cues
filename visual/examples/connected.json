@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "id": "sound-cues-connected",
+  "title": "Sound cues: connected consumer",
+  "status": "example",
+  "view": "component",
+  "focus": "component",
+  "definitions": [
+    {
+      "id": "ourapps-ae.sound-cues",
+      "name": "Sound cues",
+      "kind": "component",
+      "status": "example",
+      "package": "ourapps-ae/sound-cues",
+      "version": "0.3.0",
+      "ports": [
+        {
+          "id": "preferences",
+          "name": "Preferences",
+          "direction": "input",
+          "kind": "interface",
+          "type": "ae/preferences",
+          "version": "1.0.0",
+          "required": true,
+          "cardinality": "one"
+        },
+        {
+          "id": "sound-cues",
+          "name": "Sound cues",
+          "direction": "output",
+          "kind": "interface",
+          "type": "ae/sound-cues",
+          "version": "1.0.0"
+        }
+      ],
+      "settings": [
+        {
+          "id": "soundManifest",
+          "name": "Soundmanifest",
+          "type": "string",
+          "required": false,
+          "secret": false,
+          "default": "sounds"
+        },
+        {
+          "id": "defaultMuted",
+          "name": "Defaultmuted",
+          "type": "boolean",
+          "required": false,
+          "secret": false,
+          "default": false
+        }
+      ]
+    },
+    {
+      "id": "consumer",
+      "name": "Example application consumer",
+      "kind": "application",
+      "status": "example",
+      "revision": "0.1.0",
+      "ports": [
+        {
+          "id": "sound-cues",
+          "name": "Sound cues",
+          "direction": "input",
+          "kind": "interface",
+          "type": "ae/sound-cues",
+          "version": "1.0.0",
+          "required": true,
+          "cardinality": "one"
+        },
+        {
+          "id": "preferences",
+          "name": "Preferences",
+          "direction": "output",
+          "kind": "interface",
+          "type": "ae/preferences",
+          "version": "1.0.0"
+        }
+      ],
+      "settings": []
+    }
+  ],
+  "instances": [
+    {
+      "id": "component",
+      "name": "Sound cues",
+      "definition": "ourapps-ae.sound-cues",
+      "configuration": {}
+    },
+    {
+      "id": "consumer",
+      "name": "Example consumer",
+      "definition": "consumer",
+      "configuration": {}
+    }
+  ],
+  "connections": [
+    {
+      "source": {
+        "instance": "component",
+        "port": "sound-cues"
+      },
+      "target": {
+        "instance": "consumer",
+        "port": "sound-cues"
+      }
+    },
+    {
+      "source": {
+        "instance": "consumer",
+        "port": "preferences"
+      },
+      "target": {
+        "instance": "component",
+        "port": "preferences"
+      }
+    }
+  ]
+}

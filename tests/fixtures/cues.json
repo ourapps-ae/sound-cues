@@ -1,0 +1,148 @@
+{
+ "plans": [
+  {
+   "event": "button",
+   "steps": [
+    {
+     "cue": "tap",
+     "delayMs": 0
+    }
+   ]
+  },
+  {
+   "event": "joined",
+   "steps": [
+    {
+     "cue": "enter",
+     "delayMs": 0
+    }
+   ]
+  },
+  {
+   "event": "left",
+   "steps": [
+    {
+     "cue": "exit",
+     "delayMs": 0
+    }
+   ]
+  },
+  {
+   "event": "dealt",
+   "steps": [
+    {
+     "cue": "deal",
+     "delayMs": 0
+    }
+   ]
+  },
+  {
+   "event": "reveal",
+   "steps": [
+    {
+     "cue": "deal",
+     "delayMs": 0
+    },
+    {
+     "cue": "flip",
+     "delayMs": 300
+    }
+   ]
+  },
+  {
+   "event": "won",
+   "steps": [
+    {
+     "cue": "success",
+     "delayMs": 500
+    }
+   ]
+  },
+  {
+   "event": "problem",
+   "steps": [
+    {
+     "cue": "fail",
+     "delayMs": 0
+    },
+    {
+     "cue": "alert",
+     "delayMs": 120
+    }
+   ]
+  },
+  {
+   "event": "tap",
+   "steps": [
+    {
+     "cue": "tap",
+     "delayMs": 0
+    }
+   ]
+  },
+  {
+   "event": "flip",
+   "steps": [
+    {
+     "cue": "flip",
+     "delayMs": 0
+    }
+   ]
+  },
+  {
+   "event": "nothing",
+   "steps": []
+  }
+ ],
+ "resources": [
+  {
+   "file": "tap.wav",
+   "name": "snd_tap"
+  },
+  {
+   "file": "ui/Bot-Add.wav",
+   "name": "snd_bot_add"
+  },
+  {
+   "file": "deal 2.mp3",
+   "name": "snd_deal_2"
+  },
+  {
+   "file": "Win!.ogg",
+   "name": "snd_win"
+  }
+ ],
+ "muted": [
+  {
+   "sound": true,
+   "defaultMuted": true,
+   "muted": false
+  },
+  {
+   "sound": true,
+   "defaultMuted": false,
+   "muted": false
+  },
+  {
+   "sound": false,
+   "defaultMuted": true,
+   "muted": true
+  },
+  {
+   "sound": false,
+   "defaultMuted": false,
+   "muted": true
+  },
+  {
+   "sound": null,
+   "defaultMuted": true,
+   "muted": true
+  },
+  {
+   "sound": null,
+   "defaultMuted": false,
+   "muted": false
+  }
+ ],
+ "problems": []
+}

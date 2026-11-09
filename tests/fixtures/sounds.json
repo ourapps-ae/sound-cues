@@ -1,0 +1,22 @@
+{
+  "format": 1,
+  "cues": {
+    "tap": "tap.wav",
+    "enter": "enter.wav",
+    "exit": "exit.wav",
+    "deal": "deal.wav",
+    "flip": "flip.wav",
+    "success": "success.wav",
+    "fail": "fail.mp3",
+    "alert": "alert.ogg"
+  },
+  "events": {
+    "button": ["tap"],
+    "joined": ["enter"],
+    "left": ["exit"],
+    "dealt": ["deal"],
+    "reveal": [{ "cue": "deal" }, { "cue": "flip", "delayMs": 300 }],
+    "won": [{ "cue": "success", "delayMs": 500 }],
+    "problem": ["fail", { "cue": "alert", "delayMs": 120 }]
+  }
+}

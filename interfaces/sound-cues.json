@@ -1,0 +1,40 @@
+{
+  "id": "sound-cues",
+  "type": "ae/sound-cues",
+  "version": "1.0.0",
+  "description": "Sounds for events. A manifest names the sound files (cues) and says which cues each event plays and when; sound is on or off by the device's sound preference.",
+  "settings": {
+    "soundManifest": "folder name (letters, digits and hyphens; an aepm string setting cannot hold a path) holding manifest.json and the sound files, default 'sounds'",
+    "defaultMuted": "boolean, whether sound starts muted when the device has no recorded preference, default false"
+  },
+  "manifest": {
+    "format": 1,
+    "cues": "map of cue name (lower case, digits, hyphens, underscores) to a relative file path ending in wav, mp3, ogg, m4a, aac or caf; no two cues share a file",
+    "events": "optional map of event name to a list of steps; a step is a cue name or {cue, delayMs} with delayMs 0 to 60000"
+  },
+  "operations": {
+    "createCues": { "arguments": ["options:{manifest:Manifest,baseUrl:string,settings?:{soundManifest?,defaultMuted?},preferences?:{get('sound'),set('sound',boolean),subscribe(listener)},allowed?:()=>boolean,createContext?,fetchFile?}"], "returns": "Cues" },
+    "Cues.unlock": { "arguments": [], "returns": "void (creates and resumes the audio context; call from a tap)" },
+    "Cues.unlockOn": { "arguments": ["target:{addEventListener}", "type?:string"], "returns": "void" },
+    "Cues.play": { "arguments": ["cue:string", "delayMs?:number"], "returns": "void" },
+    "Cues.emit": { "arguments": ["event:string"], "returns": "void" },
+    "Cues.preload": { "arguments": [], "returns": "Promise<void>" },
+    "Cues.stopAll": { "arguments": [], "returns": "void" },
+    "Cues.muted": { "arguments": [], "returns": "boolean" },
+    "Cues.setMuted": { "arguments": ["muted:boolean"], "returns": "void (writes the sound preference when there is one)" },
+    "Cues.onMutedChange": { "arguments": ["listener:(muted:boolean)=>void"], "returns": "() => void" },
+    "validateManifest": { "arguments": ["manifest:unknown"], "returns": "string[]" },
+    "parseManifest": { "arguments": ["text:string"], "returns": "Manifest" },
+    "eventPlan": { "arguments": ["manifest:Manifest", "event:string"], "returns": "{cue:string,delayMs:number}[]" },
+    "manifestPath": { "arguments": ["soundManifest:string"], "returns": "string" },
+    "normaliseSettings": { "arguments": ["input?:Partial<SoundSettings>"], "returns": "SoundSettings" },
+    "isMuted": { "arguments": ["sound:boolean|null|undefined", "defaultMuted:boolean"], "returns": "boolean" },
+    "soundPreferenceDefault": { "arguments": ["defaultMuted:boolean"], "returns": "boolean (the default to give the preferences component for 'sound')" },
+    "rawResourceName": { "arguments": ["file:string", "prefix?:string"], "returns": "string (Android raw resource name)" },
+    "fileUrl": { "arguments": ["baseUrl:string", "file:string"], "returns": "string" }
+  },
+  "native": {
+    "apple": ["SoundCueModel.parseManifest", "SoundCueModel.eventPlan", "SoundCueModel.isMuted", "SoundCuePlayer(manifest:locate:isMuted:allowed:).play/emit/stopAll"],
+    "android": ["CueModel.validate", "CueModel.eventPlan", "CueModel.isMuted", "ManifestJson.parse", "SoundCuePlayer(manifest, isMuted, allowed).init/play/emit/stopAll/release"]
+  }
+}
