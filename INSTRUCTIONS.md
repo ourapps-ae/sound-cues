@@ -3,11 +3,11 @@
 ## For the agent
 Select `ourapps-ae/sound-cues`; connect `preferences` to the preferences component's output. Set `soundManifest` to the folder the recipe's sound files and manifest live in, and `defaultMuted` only if the user wants sound off to begin with. The event names in the manifest come from the recipe; do not invent them here.
 
-- Select package `ourapps-ae/sound-cues` version `0.3.0`.
+- Select package `ourapps-ae/sound-cues` version `0.4.0`.
 - Settings to configure:
   - `soundManifest` (string, slug; optional; default `sounds`)
   - `defaultMuted` (boolean; optional; default `False`)
-- Connect the provided `sound-cues` (ae/sound-cues 1.0.0) to the consumer that needs it.
+- Connect the provided `sound-cues` (ae/sound-cues 1.0.0, OpenRPC 1.3.2 document `interfaces/sound-cues.json`; its `Manifest` schema is the shape of `manifest.json`) to the consumer that needs it.
 - Supply `preferences` (ae/preferences 1.0.0) from the component that provides it.
 - No accounts or keys are needed.
 

@@ -1,241 +1,48 @@
 {
-  "format": 1,
-  "kind": "component",
-  "identity": {
-    "name": "ourapps-ae/sound-cues",
-    "version": "0.3.0",
-    "sourceRevision": "19905b75dbea89fbfd424d67fe26c81aaed0e018",
-    "sourceTreeDigest": "0000000000000000000000000000000000000000000000000000000000000000",
-    "licenceStatus": "deferred"
-  },
-  "facilities": [
-    {
-      "id": "sound-cues",
-      "description": "Sound cues for events, a manifest of sounds, mute by the device's sound preference"
-    }
-  ],
-  "documents": {
-    "contract": "CONTRACT.md",
-    "interfaces": [
-      "interfaces/required/preferences.json",
-      "interfaces/sound-cues.json",
-      "suitability.json"
-    ],
-    "examples": [
-      "examples/consumer.ts"
-    ],
-    "licenceNotice": "LICENCE"
-  },
-  "collect": [
-    {
-      "id": "soundManifest",
-      "type": "string",
-      "grammar": "slug",
-      "required": false,
-      "secret": false,
-      "default": "sounds"
-    },
-    {
-      "id": "defaultMuted",
-      "type": "boolean",
-      "grammar": "boolean",
-      "required": false,
-      "secret": false,
-      "default": false
-    }
-  ],
-  "files": [
-    {
-      "path": "CONTRACT.md",
-      "executable": false
-    },
-    {
-      "path": "INSTRUCTIONS.md",
-      "executable": false
-    },
-    {
-      "path": "LICENCE",
-      "executable": false
-    },
-    {
-      "path": "SOURCE.md",
-      "executable": false
-    },
-    {
-      "path": "examples/consumer.ts",
-      "executable": false
-    },
-    {
-      "path": "implementation/android/src/main/java/ae/sound/CueModel.kt",
-      "executable": false
-    },
-    {
-      "path": "implementation/android/src/main/java/ae/sound/ManifestJson.kt",
-      "executable": false
-    },
-    {
-      "path": "implementation/android/src/main/java/ae/sound/SoundCuePlayer.kt",
-      "executable": false
-    },
-    {
-      "path": "implementation/apple/Sources/SoundCueModel.swift",
-      "executable": false
-    },
-    {
-      "path": "implementation/apple/Sources/SoundCuePlayer.swift",
-      "executable": false
-    },
-    {
-      "path": "implementation/web/cue-model.ts",
-      "executable": false
-    },
-    {
-      "path": "implementation/web/cues.ts",
-      "executable": false
-    },
-    {
-      "path": "interfaces/required/preferences.json",
-      "executable": false
-    },
-    {
-      "path": "interfaces/sound-cues.json",
-      "executable": false
-    },
-    {
-      "path": "suitability.json",
-      "executable": false
-    },
-    {
-      "path": "tests/android/Expected.kt",
-      "executable": false
-    },
-    {
-      "path": "tests/android/Main.kt",
-      "executable": false
-    },
-    {
-      "path": "tests/apple/main.swift",
-      "executable": false
-    },
-    {
-      "path": "tests/fixtures/cues.json",
-      "executable": false
-    },
-    {
-      "path": "tests/fixtures/sounds.json",
-      "executable": false
-    },
-    {
-      "path": "tests/make-fixtures.ts",
-      "executable": false
-    },
-    {
-      "path": "tests/native.py",
-      "executable": false
-    },
-    {
-      "path": "tests/web.test.ts",
-      "executable": false
-    },
-    {
-      "path": "tools.lock.json",
-      "executable": false
-    },
-    {
-      "path": "visual/definition.json",
-      "executable": false
-    },
-    {
-      "path": "visual/examples/connected.json",
-      "executable": false
-    },
-    {
-      "path": "visual/output/connected.png",
-      "executable": false
-    },
-    {
-      "path": "visual/output/connected.svg",
-      "executable": false
-    },
-    {
-      "path": "visual/output/description.md",
-      "executable": false
-    }
-  ],
   "artefacts": [
     {
-      "source": "implementation/android/src/main/java/ae/sound/CueModel.kt",
       "destination": "components/sound-cues/android/src/main/java/ae/sound/CueModel.kt",
-      "template": false,
-      "executable": false
+      "executable": false,
+      "source": "implementation/android/src/main/java/ae/sound/CueModel.kt",
+      "template": false
     },
     {
-      "source": "implementation/android/src/main/java/ae/sound/ManifestJson.kt",
       "destination": "components/sound-cues/android/src/main/java/ae/sound/ManifestJson.kt",
-      "template": false,
-      "executable": false
+      "executable": false,
+      "source": "implementation/android/src/main/java/ae/sound/ManifestJson.kt",
+      "template": false
     },
     {
-      "source": "implementation/android/src/main/java/ae/sound/SoundCuePlayer.kt",
       "destination": "components/sound-cues/android/src/main/java/ae/sound/SoundCuePlayer.kt",
-      "template": false,
-      "executable": false
+      "executable": false,
+      "source": "implementation/android/src/main/java/ae/sound/SoundCuePlayer.kt",
+      "template": false
     },
     {
-      "source": "implementation/apple/Sources/SoundCueModel.swift",
       "destination": "components/sound-cues/apple/Sources/SoundCueModel.swift",
-      "template": false,
-      "executable": false
+      "executable": false,
+      "source": "implementation/apple/Sources/SoundCueModel.swift",
+      "template": false
     },
     {
-      "source": "implementation/apple/Sources/SoundCuePlayer.swift",
       "destination": "components/sound-cues/apple/Sources/SoundCuePlayer.swift",
-      "template": false,
-      "executable": false
+      "executable": false,
+      "source": "implementation/apple/Sources/SoundCuePlayer.swift",
+      "template": false
     },
     {
-      "source": "implementation/web/cue-model.ts",
       "destination": "components/sound-cues/web/cue-model.ts",
-      "template": false,
-      "executable": false
+      "executable": false,
+      "source": "implementation/web/cue-model.ts",
+      "template": false
     },
     {
-      "source": "implementation/web/cues.ts",
       "destination": "components/sound-cues/web/cues.ts",
-      "template": false,
-      "executable": false
+      "executable": false,
+      "source": "implementation/web/cues.ts",
+      "template": false
     }
   ],
-  "dependencies": [],
-  "provides": [
-    {
-      "id": "sound-cues",
-      "type": "ae/sound-cues",
-      "version": "1.0.0",
-      "path": "interfaces/sound-cues.json"
-    }
-  ],
-  "requires": [
-    {
-      "id": "preferences",
-      "type": "ae/preferences",
-      "version": "1.0.0",
-      "path": "interfaces/required/preferences.json"
-    }
-  ],
-  "visual": {
-    "definition": "visual/definition.json",
-    "examples": [
-      "visual/examples/connected.json"
-    ],
-    "outputs": [
-      "visual/output/connected.svg",
-      "visual/output/connected.png"
-    ],
-    "descriptions": [
-      "visual/output/description.md"
-    ]
-  },
   "capabilities": {
     "hosts": [],
     "secrets": [],
@@ -249,94 +56,291 @@
       "components/sound-cues/web/cues.ts"
     ]
   },
+  "collect": [
+    {
+      "default": "sounds",
+      "grammar": "slug",
+      "id": "soundManifest",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    {
+      "default": false,
+      "grammar": "boolean",
+      "id": "defaultMuted",
+      "required": false,
+      "secret": false,
+      "type": "boolean"
+    }
+  ],
+  "dependencies": [],
+  "documents": {
+    "contract": "CONTRACT.md",
+    "examples": [
+      "examples/consumer.ts"
+    ],
+    "interfaces": [
+      "interfaces/required-preferences.json",
+      "interfaces/sound-cues.json",
+      "suitability.json"
+    ],
+    "licenceNotice": "LICENCE"
+  },
+  "facilities": [
+    {
+      "description": "Sound cues for events, a manifest of sounds, mute by the device's sound preference",
+      "id": "sound-cues"
+    }
+  ],
+  "files": [
+    {
+      "executable": false,
+      "path": "CONTRACT.md"
+    },
+    {
+      "executable": false,
+      "path": "INSTRUCTIONS.md"
+    },
+    {
+      "executable": false,
+      "path": "LICENCE"
+    },
+    {
+      "executable": false,
+      "path": "NOTICE"
+    },
+    {
+      "executable": false,
+      "path": "SOURCE.md"
+    },
+    {
+      "executable": false,
+      "path": "examples/consumer.ts"
+    },
+    {
+      "executable": false,
+      "path": "implementation/android/src/main/java/ae/sound/CueModel.kt"
+    },
+    {
+      "executable": false,
+      "path": "implementation/android/src/main/java/ae/sound/ManifestJson.kt"
+    },
+    {
+      "executable": false,
+      "path": "implementation/android/src/main/java/ae/sound/SoundCuePlayer.kt"
+    },
+    {
+      "executable": false,
+      "path": "implementation/apple/Sources/SoundCueModel.swift"
+    },
+    {
+      "executable": false,
+      "path": "implementation/apple/Sources/SoundCuePlayer.swift"
+    },
+    {
+      "executable": false,
+      "path": "implementation/web/cue-model.ts"
+    },
+    {
+      "executable": false,
+      "path": "implementation/web/cues.ts"
+    },
+    {
+      "executable": false,
+      "path": "interfaces/required-preferences.json"
+    },
+    {
+      "executable": false,
+      "path": "interfaces/sound-cues.json"
+    },
+    {
+      "executable": false,
+      "path": "suitability.json"
+    },
+    {
+      "executable": false,
+      "path": "tests/android/Expected.kt"
+    },
+    {
+      "executable": false,
+      "path": "tests/android/Main.kt"
+    },
+    {
+      "executable": false,
+      "path": "tests/apple/main.swift"
+    },
+    {
+      "executable": false,
+      "path": "tests/fixtures/cues.json"
+    },
+    {
+      "executable": false,
+      "path": "tests/fixtures/sounds.json"
+    },
+    {
+      "executable": false,
+      "path": "tests/make-fixtures.ts"
+    },
+    {
+      "executable": false,
+      "path": "tests/native.py"
+    },
+    {
+      "executable": false,
+      "path": "tests/web.test.ts"
+    },
+    {
+      "executable": false,
+      "path": "tools.lock.json"
+    },
+    {
+      "executable": false,
+      "path": "visual/definition.json"
+    },
+    {
+      "executable": false,
+      "path": "visual/examples/connected.json"
+    },
+    {
+      "executable": false,
+      "path": "visual/output/connected.png"
+    },
+    {
+      "executable": false,
+      "path": "visual/output/connected.svg"
+    },
+    {
+      "executable": false,
+      "path": "visual/output/description.md"
+    }
+  ],
+  "format": 1,
+  "identity": {
+    "licence": "Apache-2.0",
+    "name": "ourapps-ae/sound-cues",
+    "sourceRevision": "19905b75dbea89fbfd424d67fe26c81aaed0e018",
+    "sourceTreeDigest": "0000000000000000000000000000000000000000000000000000000000000000",
+    "version": "0.4.0"
+  },
   "infrastructure": {
     "accounts": [],
     "costStatus": "unmeasured",
     "deployedReason": "No deployed service; injected resources and local library functions only."
   },
+  "kind": "component",
+  "provides": [
+    {
+      "id": "sound-cues",
+      "path": "interfaces/sound-cues.json",
+      "type": "ae/sound-cues",
+      "version": "1.0.0"
+    }
+  ],
+  "requires": [
+    {
+      "id": "preferences",
+      "path": "interfaces/required-preferences.json",
+      "type": "ae/preferences",
+      "version": "1.0.0"
+    }
+  ],
+  "upgrade": {
+    "migration": "files-only",
+    "policy": "patch"
+  },
   "verification": [
     {
-      "id": "web",
-      "root": "package",
       "argv": [
         "node",
         "--test",
         "tests/web.test.ts"
       ],
       "cwd": ".",
-      "prepare": [],
-      "tools": {
-        "node": "26.5.0"
-      },
+      "expectedExit": 0,
       "fixtures": [
         "tests/fixtures/cues.json",
         "tests/fixtures/sounds.json"
       ],
+      "id": "web",
       "locks": [
         "tools.lock.json"
       ],
       "network": false,
-      "timeoutSeconds": 120,
-      "expectedExit": 0,
+      "prepare": [],
+      "requirements": [],
+      "root": "package",
       "scope": "required-local",
-      "requirements": []
+      "timeoutSeconds": 120,
+      "tools": {
+        "node": "26.5.0"
+      }
     },
     {
-      "id": "apple",
-      "root": "package",
       "argv": [
         "python3",
         "tests/native.py",
         "apple"
       ],
       "cwd": ".",
-      "prepare": [],
-      "tools": {
-        "python3": "3.12.8",
-        "swiftc": "6.4.2"
-      },
+      "expectedExit": 0,
       "fixtures": [
         "tests/apple/main.swift"
       ],
+      "id": "apple",
       "locks": [
         "tools.lock.json"
       ],
       "network": false,
-      "timeoutSeconds": 120,
-      "expectedExit": 0,
+      "prepare": [],
+      "requirements": [],
+      "root": "package",
       "scope": "platform",
-      "requirements": []
+      "timeoutSeconds": 120,
+      "tools": {
+        "python3": "3.12.8",
+        "swiftc": "6.4.2"
+      }
     },
     {
-      "id": "android",
-      "root": "package",
       "argv": [
         "python3",
         "tests/native.py",
         "android"
       ],
       "cwd": ".",
-      "prepare": [],
-      "tools": {
-        "python3": "3.12.8",
-        "kotlinc": "2.2.0",
-        "java": "26.0.1"
-      },
+      "expectedExit": 0,
       "fixtures": [
         "tests/android/Main.kt"
       ],
+      "id": "android",
       "locks": [
         "tools.lock.json"
       ],
       "network": false,
-      "timeoutSeconds": 120,
-      "expectedExit": 0,
+      "prepare": [],
+      "requirements": [],
+      "root": "package",
       "scope": "platform",
-      "requirements": []
+      "timeoutSeconds": 120,
+      "tools": {
+        "java": "26.0.1",
+        "kotlinc": "2.2.0",
+        "python3": "3.12.8"
+      }
     }
   ],
-  "upgrade": {
-    "policy": "patch",
-    "migration": "files-only"
+  "visual": {
+    "definition": "visual/definition.json",
+    "descriptions": [
+      "visual/output/description.md"
+    ],
+    "examples": [
+      "visual/examples/connected.json"
+    ],
+    "outputs": [
+      "visual/output/connected.svg",
+      "visual/output/connected.png"
+    ]
   }
 }

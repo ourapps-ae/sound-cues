@@ -234,3 +234,24 @@ test("a consumer clicks a button without a game", async () => {
   assert.equal(ctx.made.length, 1);
   assert.equal(cues.muted(), false);
 });
+
+test("the OpenRPC interface describes the manifest, the settings and the exported functions", async () => {
+  const doc = JSON.parse(readFileSync(new URL("../interfaces/sound-cues.json", import.meta.url), "utf8"));
+  assert.equal(doc.openrpc, "1.3.2");
+  assert.deepEqual([doc.info.title, doc.info.version], ["ae/sound-cues", "1.0.0"]);
+  const { Name, SoundFile, Manifest: shape, SoundSettings } = doc.components.schemas;
+  const name = new RegExp(Name.pattern), file = new RegExp(SoundFile.pattern);
+  for (const n of [...Object.keys(manifest.cues), ...Object.keys(manifest.events ?? {})]) assert.match(n, name);
+  for (const bad of ["Tap", "1tap", "tap.x"]) assert.doesNotMatch(bad, name);
+  for (const f of ["tap.wav", "a/b.MP3", "x.caf", "../a.wav", "a//b.wav", "a.txt", ".a.wav", "/a.wav"]) assert.equal(file.test(f), isSafeFile(f), f);
+  assert.deepEqual(shape.required, ["format", "cues"]);
+  assert.deepEqual(Object.keys(SoundSettings.properties), Object.keys(DEFAULT_SETTINGS));
+  assert.equal(SoundSettings.properties.soundManifest.default, DEFAULT_SETTINGS.soundManifest);
+  const web: Record<string, unknown> = { ...(await import("../implementation/web/cue-model.ts")), ...(await import("../implementation/web/cues.ts")) };
+  const player = createCues({ manifest, baseUrl: "./sounds" }) as unknown as Record<string, unknown>;
+  for (const method of doc.methods) {
+    const [owner, member] = method.name.split(".");
+    if (member) assert.equal(typeof player[member], "function", method.name);
+    else assert.equal(typeof web[owner], "function", method.name);
+  }
+});

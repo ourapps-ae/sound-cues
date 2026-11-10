@@ -1,40 +1,698 @@
 {
-  "id": "sound-cues",
-  "type": "ae/sound-cues",
-  "version": "1.0.0",
-  "description": "Sounds for events. A manifest names the sound files (cues) and says which cues each event plays and when; sound is on or off by the device's sound preference.",
-  "settings": {
-    "soundManifest": "folder name (letters, digits and hyphens; an aepm string setting cannot hold a path) holding manifest.json and the sound files, default 'sounds'",
-    "defaultMuted": "boolean, whether sound starts muted when the device has no recorded preference, default false"
+  "openrpc": "1.3.2",
+  "info": {
+    "title": "ae/sound-cues",
+    "version": "1.0.0",
+    "description": "Sounds for events. A manifest names the sound files (cues) and says which cues each event plays and when; sound is on or off by the device's sound preference (the preferences component's sound value). Web: implementation/web/cue-model.ts and cues.ts (Web Audio). Apple: SoundCueModel and SoundCuePlayer (AVFoundation). Android: CueModel, ManifestJson and SoundCuePlayer (SoundPool) in package ae.sound."
   },
-  "manifest": {
-    "format": 1,
-    "cues": "map of cue name (lower case, digits, hyphens, underscores) to a relative file path ending in wav, mp3, ogg, m4a, aac or caf; no two cues share a file",
-    "events": "optional map of event name to a list of steps; a step is a cue name or {cue, delayMs} with delayMs 0 to 60000"
-  },
-  "operations": {
-    "createCues": { "arguments": ["options:{manifest:Manifest,baseUrl:string,settings?:{soundManifest?,defaultMuted?},preferences?:{get('sound'),set('sound',boolean),subscribe(listener)},allowed?:()=>boolean,createContext?,fetchFile?}"], "returns": "Cues" },
-    "Cues.unlock": { "arguments": [], "returns": "void (creates and resumes the audio context; call from a tap)" },
-    "Cues.unlockOn": { "arguments": ["target:{addEventListener}", "type?:string"], "returns": "void" },
-    "Cues.play": { "arguments": ["cue:string", "delayMs?:number"], "returns": "void" },
-    "Cues.emit": { "arguments": ["event:string"], "returns": "void" },
-    "Cues.preload": { "arguments": [], "returns": "Promise<void>" },
-    "Cues.stopAll": { "arguments": [], "returns": "void" },
-    "Cues.muted": { "arguments": [], "returns": "boolean" },
-    "Cues.setMuted": { "arguments": ["muted:boolean"], "returns": "void (writes the sound preference when there is one)" },
-    "Cues.onMutedChange": { "arguments": ["listener:(muted:boolean)=>void"], "returns": "() => void" },
-    "validateManifest": { "arguments": ["manifest:unknown"], "returns": "string[]" },
-    "parseManifest": { "arguments": ["text:string"], "returns": "Manifest" },
-    "eventPlan": { "arguments": ["manifest:Manifest", "event:string"], "returns": "{cue:string,delayMs:number}[]" },
-    "manifestPath": { "arguments": ["soundManifest:string"], "returns": "string" },
-    "normaliseSettings": { "arguments": ["input?:Partial<SoundSettings>"], "returns": "SoundSettings" },
-    "isMuted": { "arguments": ["sound:boolean|null|undefined", "defaultMuted:boolean"], "returns": "boolean" },
-    "soundPreferenceDefault": { "arguments": ["defaultMuted:boolean"], "returns": "boolean (the default to give the preferences component for 'sound')" },
-    "rawResourceName": { "arguments": ["file:string", "prefix?:string"], "returns": "string (Android raw resource name)" },
-    "fileUrl": { "arguments": ["baseUrl:string", "file:string"], "returns": "string" }
-  },
-  "native": {
-    "apple": ["SoundCueModel.parseManifest", "SoundCueModel.eventPlan", "SoundCueModel.isMuted", "SoundCuePlayer(manifest:locate:isMuted:allowed:).play/emit/stopAll"],
-    "android": ["CueModel.validate", "CueModel.eventPlan", "CueModel.isMuted", "ManifestJson.parse", "SoundCuePlayer(manifest, isMuted, allowed).init/play/emit/stopAll/release"]
+  "methods": [
+    {
+      "name": "manifestPath",
+      "description": "The manifest's path for the soundManifest setting: <folder>/manifest.json. Swift: SoundCueModel.manifestPath(_:) throws SoundCueError.invalid. Kotlin: CueModel.manifestPath(soundManifest) throws IllegalArgumentException.",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "soundManifest",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "path",
+        "schema": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,63}/manifest\\.json$"
+        }
+      },
+      "errors": [
+        {
+          "code": 1,
+          "message": "soundManifest must be a folder name of lower-case letters, digits and hyphens: <value>"
+        }
+      ]
+    },
+    {
+      "name": "normaliseSettings",
+      "description": "The settings with defaults filled in, checked. Web only.",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "input",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/PartialSoundSettings"
+          }
+        }
+      ],
+      "result": {
+        "name": "settings",
+        "schema": {
+          "$ref": "#/components/schemas/SoundSettings"
+        }
+      },
+      "errors": [
+        {
+          "code": 1,
+          "message": "soundManifest must be a folder name of lower-case letters, digits and hyphens: <value>"
+        },
+        {
+          "code": 2,
+          "message": "defaultMuted must be true or false"
+        }
+      ]
+    },
+    {
+      "name": "isSafeFile",
+      "description": "True when a value is a SoundFile. Swift: SoundCueModel.isSafeFile(_:). Kotlin: CueModel.isSafeFile(file).",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "file",
+          "required": true,
+          "schema": {}
+        }
+      ],
+      "result": {
+        "name": "safe",
+        "schema": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "name": "validateManifest",
+      "description": "One message per problem in a manifest; an empty list means it is usable. Swift: part of SoundCueModel.parseManifest. Kotlin: CueModel.validate(manifest) on a parsed SoundManifest.",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "manifest",
+          "required": true,
+          "schema": {}
+        }
+      ],
+      "result": {
+        "name": "problems",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "parseManifest",
+      "description": "Parses and checks manifest text. Swift: SoundCueModel.parseManifest(_: Data) throws SoundCueError.notJSON or .invalid(problems). Kotlin: ManifestJson.parse(text) throws IllegalArgumentException.",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "text",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "manifest",
+        "schema": {
+          "$ref": "#/components/schemas/Manifest"
+        }
+      },
+      "errors": [
+        {
+          "code": 3,
+          "message": "manifest is not JSON: <reason>"
+        },
+        {
+          "code": 4,
+          "message": "<problem>; <problem> (the validateManifest messages)"
+        }
+      ]
+    },
+    {
+      "name": "eventPlan",
+      "description": "What an event plays, with delays filled in; an event that is itself a cue name with no entry of its own plays that cue at once; any other unknown name plays nothing. Swift: SoundCueModel.eventPlan(_:_:). Kotlin: CueModel.eventPlan(manifest, event).",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "manifest",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Manifest"
+          }
+        },
+        {
+          "name": "event",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "steps",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/CueStep"
+          }
+        }
+      }
+    },
+    {
+      "name": "cueFiles",
+      "description": "Every file the manifest uses, in cue order, for loading ahead of time. Web only; Swift SoundManifest.cueNames lists the cue names sorted.",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "manifest",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Manifest"
+          }
+        }
+      ],
+      "result": {
+        "name": "files",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/SoundFile"
+          }
+        }
+      }
+    },
+    {
+      "name": "fileUrl",
+      "description": "baseUrl (trailing slashes dropped) joined to a safe file. Web only; Swift locates files with the locate function given to SoundCuePlayer, Kotlin as raw resources.",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "baseUrl",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "file",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/SoundFile"
+          }
+        }
+      ],
+      "result": {
+        "name": "url",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "errors": [
+        {
+          "code": 5,
+          "message": "unsafe sound file: <file>"
+        }
+      ]
+    },
+    {
+      "name": "rawResourceName",
+      "description": "The Android raw resource name for a file: prefix plus its base name in lower case with other characters as underscores (tap.wav is snd_tap). Swift: SoundCueModel.rawResourceName(_:prefix:). Kotlin: CueModel.rawResourceName(file, prefix).",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "file",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "prefix",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "default": "snd_"
+          }
+        }
+      ],
+      "result": {
+        "name": "name",
+        "schema": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]*$"
+        }
+      }
+    },
+    {
+      "name": "isMuted",
+      "description": "Muted is the opposite of the device's sound preference; with no recorded preference defaultMuted decides. Swift: SoundCueModel.isMuted(sound:defaultMuted:). Kotlin: CueModel.isMuted(sound, defaultMuted).",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "sound",
+          "description": "The preference; null or absent when none is recorded.",
+          "required": true,
+          "schema": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        {
+          "name": "defaultMuted",
+          "required": true,
+          "schema": {
+            "type": "boolean"
+          }
+        }
+      ],
+      "result": {
+        "name": "muted",
+        "schema": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "name": "soundPreferenceDefault",
+      "description": "The default to give the preferences component for sound: the opposite of defaultMuted. Swift: SoundCueModel.soundPreferenceDefault(defaultMuted:). Kotlin: CueModel.soundPreferenceDefault(defaultMuted).",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "defaultMuted",
+          "required": true,
+          "schema": {
+            "type": "boolean"
+          }
+        }
+      ],
+      "result": {
+        "name": "sound",
+        "schema": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "name": "createCues",
+      "description": "A player for a manifest. Nothing plays before unlock has run once (browsers allow sound only after a tap); sounds load when first needed, may overlap, and all stop when sound is turned off. Muted follows the preferences' sound value, or is kept in memory without preferences. Swift: SoundCuePlayer(manifest:locate:isMuted:allowed:maxPerCue:) on the main actor. Kotlin: SoundCuePlayer(manifest, isMuted, allowed, maxStreams) then init(context, resolveRaw) and release() when done.",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "options",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/CueOptions"
+          }
+        }
+      ],
+      "result": {
+        "name": "cues",
+        "schema": {
+          "$ref": "#/components/schemas/Cues"
+        }
+      },
+      "errors": [
+        {
+          "code": 1,
+          "message": "soundManifest must be a folder name of lower-case letters, digits and hyphens: <value>"
+        },
+        {
+          "code": 2,
+          "message": "defaultMuted must be true or false"
+        }
+      ]
+    },
+    {
+      "name": "Cues.unlock",
+      "description": "Creates and resumes the audio context; call from a tap. Called on the player createCues returns. Web only.",
+      "paramStructure": "by-position",
+      "params": [],
+      "result": {
+        "name": "none",
+        "schema": {
+          "type": "null"
+        },
+        "description": "Nothing is returned."
+      }
+    },
+    {
+      "name": "Cues.unlockOn",
+      "description": "Unlocks on the first event of type (default pointerdown) on the target while sound is allowed. Called on the player createCues returns. Web only.",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "target",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/EventTarget"
+          }
+        },
+        {
+          "name": "type",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "default": "pointerdown"
+          }
+        }
+      ],
+      "result": {
+        "name": "none",
+        "schema": {
+          "type": "null"
+        },
+        "description": "Nothing is returned."
+      }
+    },
+    {
+      "name": "Cues.play",
+      "description": "Plays one cue after delayMs unless muted, not allowed, unknown or not unlocked. Called on the player createCues returns. Swift: play(_:delayMs:). Kotlin: play(cue, delayMs) with whole milliseconds.",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "cue",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        {
+          "name": "delayMs",
+          "required": false,
+          "schema": {
+            "type": "number",
+            "minimum": 0,
+            "default": 0
+          }
+        }
+      ],
+      "result": {
+        "name": "none",
+        "schema": {
+          "type": "null"
+        },
+        "description": "Nothing is returned."
+      }
+    },
+    {
+      "name": "Cues.emit",
+      "description": "Plays what the manifest says the event plays (eventPlan). Called on the player createCues returns. Swift: emit(_:). Kotlin: emit(event).",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "event",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "none",
+        "schema": {
+          "type": "null"
+        },
+        "description": "Nothing is returned."
+      }
+    },
+    {
+      "name": "Cues.preload",
+      "description": "Loads every cue's sound once unlocked. Called on the player createCues returns. Web only; the native players prepare on first use (Kotlin: init).",
+      "paramStructure": "by-position",
+      "params": [],
+      "result": {
+        "name": "done",
+        "schema": {
+          "type": "null",
+          "description": "Resolves when every sound has loaded or failed."
+        }
+      }
+    },
+    {
+      "name": "Cues.stopAll",
+      "description": "Stops everything playing or waiting. Called on the player createCues returns. Swift and Kotlin: stopAll().",
+      "paramStructure": "by-position",
+      "params": [],
+      "result": {
+        "name": "none",
+        "schema": {
+          "type": "null"
+        },
+        "description": "Nothing is returned."
+      }
+    },
+    {
+      "name": "Cues.muted",
+      "description": "Whether sound is muted now. Called on the player createCues returns. Web only; the native players call the isMuted function they were given.",
+      "paramStructure": "by-position",
+      "params": [],
+      "result": {
+        "name": "muted",
+        "schema": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "name": "Cues.setMuted",
+      "description": "Writes the preference's sound value (the opposite of muted), or the in-memory value without preferences; muting stops everything. Called on the player createCues returns. Web only.",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "muted",
+          "required": true,
+          "schema": {
+            "type": "boolean"
+          }
+        }
+      ],
+      "result": {
+        "name": "none",
+        "schema": {
+          "type": "null"
+        },
+        "description": "Nothing is returned."
+      }
+    },
+    {
+      "name": "Cues.onMutedChange",
+      "description": "Calls the listener whenever muted changes; returns a function that removes it. Called on the player createCues returns. Web only.",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "listener",
+          "required": true,
+          "schema": {
+            "description": "A function supplied by the caller: (muted: boolean) => void. It is called, not serialised."
+          }
+        }
+      ],
+      "result": {
+        "name": "remove",
+        "schema": {
+          "description": "A function supplied by the caller: () => void. It is called, not serialised."
+        }
+      }
+    },
+    {
+      "name": "Cues.active",
+      "description": "How many cues are playing or waiting. Called on the player createCues returns. Web only.",
+      "paramStructure": "by-position",
+      "params": [],
+      "result": {
+        "name": "count",
+        "schema": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Name": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_-]{0,47}$",
+        "description": "A cue or event name: lower-case letters, digits, hyphens and underscores, at most 48."
+      },
+      "SoundFile": {
+        "type": "string",
+        "pattern": "^(?!.*\\.\\.)(?!.*//)[A-Za-z0-9][A-Za-z0-9._/-]*\\.([wW][aA][vV]|[mM][pP]3|[oO][gG][gG]|[mM]4[aA]|[aA][aA][cC]|[cC][aA][fF])$",
+        "description": "A path relative to the manifest's folder, without .. or //, ending in wav, mp3, ogg, m4a, aac or caf."
+      },
+      "ManifestStep": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/Name"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "cue"
+            ],
+            "properties": {
+              "cue": {
+                "$ref": "#/components/schemas/Name"
+              },
+              "delayMs": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 60000,
+                "default": 0
+              }
+            }
+          }
+        ],
+        "description": "A cue name, or a cue with a delay in milliseconds."
+      },
+      "Manifest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "cues"
+        ],
+        "properties": {
+          "format": {
+            "const": 1
+          },
+          "cues": {
+            "type": "object",
+            "minProperties": 1,
+            "propertyNames": {
+              "$ref": "#/components/schemas/Name"
+            },
+            "additionalProperties": {
+              "$ref": "#/components/schemas/SoundFile"
+            },
+            "description": "Cue name to file; no two cues share a file (compared without case)."
+          },
+          "events": {
+            "type": "object",
+            "propertyNames": {
+              "$ref": "#/components/schemas/Name"
+            },
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ManifestStep"
+              },
+              "minItems": 1
+            },
+            "description": "Event name to the cues it plays, in order; every step names a cue in cues."
+          }
+        },
+        "description": "The folder's manifest.json. Swift: SoundManifest (cues, events of CueStep). Kotlin: SoundManifest(cues, events)."
+      },
+      "CueStep": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "cue",
+          "delayMs"
+        ],
+        "properties": {
+          "cue": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "delayMs": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 60000
+          }
+        },
+        "description": "Swift and Kotlin: CueStep."
+      },
+      "SoundSettings": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "soundManifest",
+          "defaultMuted"
+        ],
+        "properties": {
+          "soundManifest": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,63}$",
+            "default": "sounds",
+            "description": "The folder holding manifest.json and the sound files (an aepm string setting cannot hold a path)."
+          },
+          "defaultMuted": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether sound starts muted when the device has no recorded preference."
+          }
+        },
+        "description": "The installer settings; DEFAULT_SETTINGS is sounds, false."
+      },
+      "PartialSoundSettings": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "soundManifest": {
+            "type": "string"
+          },
+          "defaultMuted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Preferences": {
+        "type": "object",
+        "description": "The preferences component's store, as far as sound goes: get('sound') returns a boolean, set('sound', value), subscribe(listener(name, value)) returns an unsubscribe function."
+      },
+      "AudioContext": {
+        "type": "object",
+        "description": "A Web Audio AudioContext or an object with state, currentTime, destination, resume(), decodeAudioData(data) and createBufferSource()."
+      },
+      "EventTarget": {
+        "type": "object",
+        "description": "An object with addEventListener(type, listener, options), such as document."
+      },
+      "CueOptions": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "manifest",
+          "baseUrl"
+        ],
+        "properties": {
+          "manifest": {
+            "$ref": "#/components/schemas/Manifest"
+          },
+          "baseUrl": {
+            "type": "string",
+            "description": "Where the manifest's files are served from, such as ./sounds."
+          },
+          "settings": {
+            "$ref": "#/components/schemas/PartialSoundSettings"
+          },
+          "preferences": {
+            "$ref": "#/components/schemas/Preferences"
+          },
+          "allowed": {
+            "description": "A function supplied by the caller: () => boolean; false stops all sound for now, such as on a shared display. It is called, not serialised."
+          },
+          "createContext": {
+            "description": "A function supplied by the caller: () => AudioContext. It is called, not serialised."
+          },
+          "fetchFile": {
+            "description": "A function supplied by the caller: (url: string) => Promise<ArrayBuffer>. It is called, not serialised."
+          }
+        }
+      },
+      "Cues": {
+        "type": "object",
+        "description": "The player createCues returns; its operations are the Cues.* methods."
+      }
+    }
   }
 }
