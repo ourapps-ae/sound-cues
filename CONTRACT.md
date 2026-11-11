@@ -23,7 +23,7 @@ Facilities: `sound-cues` (Sound cues for events, a manifest of sounds, mute by t
 - `implementation/web/cues.ts` -> `components/sound-cues/web/cues.ts`
 
 Dependencies: none.
-`tools.lock.json` pins verification tools: node 26.5.0, python3 3.12.8, swiftc 6.4.2, kotlinc 2.2.0, java 26.0.1. Licence wording remains deferred.
+`tools.lock.json` pins verification tools: node 26.5, python3 3.12, swiftc 6.4, kotlinc 2.2, java 26.0. Licence wording remains deferred.
 
 ## Provided interfaces
 - `interfaces/sound-cues.json` defines `sound-cues` (ae/sound-cues) version 1.0.0 as an OpenRPC 1.3.2 document: one method per web function and per operation of the player `createCues` returns (`Cues.play` and so on), each description naming the Swift and Kotlin form or saying it is web only, with the sound manifest (`manifest.json`), cue steps and settings as JSON Schema 2020-12 under `components.schemas`. The preferences store, audio context and callbacks are described as host values, not serialised.
@@ -43,9 +43,9 @@ None. Local audio only; no accounts, network (beyond fetching the application's 
 ## Verification
 Node tests check manifest validation (every kind of fault), event plans, settings, file and resource names and the mute rule, and run the engine against a fake audio context: nothing plays before unlock, a cue loads once and may overlap, events play their cues at the planned delays, muting stops playing and still-loading sounds and unmuting plays again, `defaultMuted` and a stored preference decide the state (a stored value wins), turning sound off in the preferences stops it, a host can forbid sound, and a missing file is silent; and that the OpenRPC interface's name and file patterns agree with the validator, its settings match the defaults, and every method it lists is an exported web function or player operation. The Apple check compiles and runs `tests/apple/main.swift` for macOS, comparing plans, resource names and the mute rule with the TypeScript output, refusing faulty manifests and exercising the player with no files, then type-checks the Swift for the iOS simulator. The Android check compares the same plans (`tests/android/Expected.kt`); kotlinc was not available where this was written, so it has not been run, and `SoundCuePlayer.kt` and `ManifestJson.kt` need the Android SDK and are compiled by the application's Gradle build. No audio output is heard by any check.
 
-- `node --test tests/web.test.ts` (web, required-local; tools: node 26.5.0)
-- `python3 tests/native.py apple` (apple, platform; tools: python3 3.12.8, swiftc 6.4.2)
-- `python3 tests/native.py android` (android, platform; tools: python3 3.12.8, kotlinc 2.2.0, java 26.0.1)
+- `node --test tests/web.test.ts` (web, required-local; tools: node 26.5)
+- `python3 tests/native.py apple` (apple, platform; tools: python3 3.12, swiftc 6.4)
+- `python3 tests/native.py android` (android, platform; tools: python3 3.12, kotlinc 2.2, java 26.0)
 
 ## Scenarios and presentation
 A button press emits `button` and a click plays; revealing cards emits `reveal` and a deal sound is followed 300 ms later by a flip; the player taps the sound toggle, everything stops and later events stay silent; on a shared display the host forbids sound; a recipe with its own sounds and event names supplies its own manifest folder.
