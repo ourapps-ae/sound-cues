@@ -31,6 +31,11 @@
           "code": 1,
           "message": "soundManifest must be a folder name of lower-case letters, digits and hyphens: <value>"
         }
+      ],
+      "tags": [
+        {
+          "name": "typescript"
+        }
       ]
     },
     {
@@ -61,6 +66,11 @@
           "code": 2,
           "message": "defaultMuted must be true or false"
         }
+      ],
+      "tags": [
+        {
+          "name": "typescript"
+        }
       ]
     },
     {
@@ -79,7 +89,12 @@
         "schema": {
           "type": "boolean"
         }
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "validateManifest",
@@ -100,7 +115,12 @@
             "type": "string"
           }
         }
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "parseManifest",
@@ -129,6 +149,11 @@
         {
           "code": 4,
           "message": "<problem>; <problem> (the validateManifest messages)"
+        }
+      ],
+      "tags": [
+        {
+          "name": "typescript"
         }
       ]
     },
@@ -160,7 +185,12 @@
             "$ref": "#/components/schemas/CueStep"
           }
         }
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "cueFiles",
@@ -183,7 +213,12 @@
             "$ref": "#/components/schemas/SoundFile"
           }
         }
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "fileUrl",
@@ -216,6 +251,11 @@
           "code": 5,
           "message": "unsafe sound file: <file>"
         }
+      ],
+      "tags": [
+        {
+          "name": "typescript"
+        }
       ]
     },
     {
@@ -245,7 +285,12 @@
           "type": "string",
           "pattern": "^[a-z0-9_]*$"
         }
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "isMuted",
@@ -276,7 +321,12 @@
         "schema": {
           "type": "boolean"
         }
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "soundPreferenceDefault",
@@ -296,7 +346,12 @@
         "schema": {
           "type": "boolean"
         }
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "createCues",
@@ -326,6 +381,11 @@
           "code": 2,
           "message": "defaultMuted must be true or false"
         }
+      ],
+      "tags": [
+        {
+          "name": "typescript"
+        }
       ]
     },
     {
@@ -339,7 +399,12 @@
           "type": "null"
         },
         "description": "Nothing is returned."
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "Cues.unlockOn",
@@ -368,7 +433,12 @@
           "type": "null"
         },
         "description": "Nothing is returned."
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "Cues.play",
@@ -398,7 +468,12 @@
           "type": "null"
         },
         "description": "Nothing is returned."
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "Cues.emit",
@@ -419,7 +494,12 @@
           "type": "null"
         },
         "description": "Nothing is returned."
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "Cues.preload",
@@ -432,7 +512,12 @@
           "type": "null",
           "description": "Resolves when every sound has loaded or failed."
         }
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "Cues.stopAll",
@@ -445,7 +530,12 @@
           "type": "null"
         },
         "description": "Nothing is returned."
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "Cues.muted",
@@ -457,7 +547,12 @@
         "schema": {
           "type": "boolean"
         }
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "Cues.setMuted",
@@ -478,7 +573,12 @@
           "type": "null"
         },
         "description": "Nothing is returned."
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "Cues.onMutedChange",
@@ -498,7 +598,12 @@
         "schema": {
           "description": "A function supplied by the caller: () => void. It is called, not serialised."
         }
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     },
     {
       "name": "Cues.active",
@@ -511,7 +616,12 @@
           "type": "integer",
           "minimum": 0
         }
-      }
+      },
+      "tags": [
+        {
+          "name": "typescript"
+        }
+      ]
     }
   ],
   "components": {
@@ -694,5 +804,10 @@
         "description": "The player createCues returns; its operations are the Cues.* methods."
       }
     }
+  },
+  "x-ourapps-modules": {
+    "web": "web/index.ts",
+    "android": "android/src/main/java",
+    "apple": "apple/Sources"
   }
 }

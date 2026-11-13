@@ -41,6 +41,12 @@
       "executable": false,
       "source": "implementation/web/cues.ts",
       "template": false
+    },
+    {
+      "destination": "components/sound-cues/web/index.ts",
+      "executable": false,
+      "source": "implementation/web/index.ts",
+      "template": false
     }
   ],
   "capabilities": {
@@ -53,7 +59,8 @@
       "components/sound-cues/apple/Sources/SoundCueModel.swift",
       "components/sound-cues/apple/Sources/SoundCuePlayer.swift",
       "components/sound-cues/web/cue-model.ts",
-      "components/sound-cues/web/cues.ts"
+      "components/sound-cues/web/cues.ts",
+      "components/sound-cues/web/index.ts"
     ]
   },
   "collect": [
@@ -145,6 +152,10 @@
     {
       "executable": false,
       "path": "implementation/web/cues.ts"
+    },
+    {
+      "executable": false,
+      "path": "implementation/web/index.ts"
     },
     {
       "executable": false,
