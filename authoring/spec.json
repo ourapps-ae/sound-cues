@@ -1,6 +1,6 @@
 {
   "name": "sound-cues",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "title": "Sound cues",
   "description": "Sounds for events with a mute, driven by a manifest of sound files, for web, Apple and Android.",
   "facilities": [

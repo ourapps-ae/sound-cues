@@ -3,7 +3,7 @@
 ## For the agent
 Select `ourapps-ae/sound-cues`; connect `preferences` to the preferences component's output. Set `soundManifest` to the folder the recipe's sound files and manifest live in, and `defaultMuted` only if the user wants sound off to begin with. The event names in the manifest come from the recipe; do not invent them here.
 
-- Select package `ourapps-ae/sound-cues` version `0.4.1`.
+- Select package `ourapps-ae/sound-cues` version `0.5.0`.
 - Settings to configure:
   - `soundManifest` (string, slug; optional; default `sounds`)
   - `defaultMuted` (boolean; optional; default `False`)
